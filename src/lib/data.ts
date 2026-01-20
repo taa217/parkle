@@ -8,9 +8,11 @@ export interface ParkingZone {
 }
 
 export const MOCK_ZONES: ParkingZone[] = [
-    { id: 'library', name: 'Library Lot', status: 'Limited', walkingTime: 5 },
-    { id: 'admin', name: 'Admin Block', status: 'Available', walkingTime: 7 },
-    { id: 'engineering', name: 'Engineering Lot', status: 'Full', walkingTime: 6 },
-    { id: 'cs', name: 'CS Lot', status: 'Available', walkingTime: 4 },
-    { id: 'sports', name: 'Sports Centre', status: 'Unknown', walkingTime: 9 },
+    { id: 'main-admin-parking', name: 'Main Administration Car Park', status: 'Available', walkingTime: 2 },
+    { id: 'great-hall-parking', name: 'Great Hall Parking', status: 'Limited', walkingTime: 3 },
+    { id: 'library-staff-parking', name: 'Library Staff Parking', status: 'Full', walkingTime: 5 },
+    { id: 'engineering-faculty-parking', name: 'Engineering Faculty Parking', status: 'Available', walkingTime: 6 },
+    { id: 'science-lecture-theatre-parking', name: 'Science Lecture Theatre Parking', status: 'Available', walkingTime: 4 },
+    { id: 'students-union-parking', name: 'Students Union Parking', status: 'Unknown', walkingTime: 5 },
+    { id: 'health-sciences-parking', name: 'Health Sciences Parking', status: 'Limited', walkingTime: 8 },
 ];

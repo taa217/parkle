@@ -1,52 +1,73 @@
 
 import { db } from './db';
-import { zones, zoneStatus, users, sensors } from './db/schema';
+import { zones, zoneStatus, users, sensors, parkingEvents, issues, zoneOverrides } from './db/schema';
 import { eq } from 'drizzle-orm';
 
+// Real-world approximate locations for UZ campus parking
 const INITIAL_ZONES = [
     {
-        id: 'library-lot',
-        name: 'Library Lot',
-        lat: -17.7815,
-        lng: 31.0520,
+        id: 'main-admin-parking',
+        name: 'Main Administration Car Park',
+        lat: -17.7840,
+        lng: 31.0530,
         capacity: 50
     },
     {
-        id: 'admin-lot',
-        name: 'Admin Lot',
-        lat: -17.7825,
-        lng: 31.0530,
-        capacity: 30
+        id: 'great-hall-parking',
+        name: 'Great Hall Parking',
+        lat: -17.7830,
+        lng: 31.0535,
+        capacity: 80
     },
     {
-        id: 'eng-lot',
-        name: 'Engineering Lot',
-        lat: -17.7835,
+        id: 'library-staff-parking',
+        name: 'Library Staff Parking',
+        lat: -17.7820,
+        lng: 31.0525,
+        capacity: 40
+    },
+    {
+        id: 'engineering-faculty-parking',
+        name: 'Engineering Faculty Parking',
+        lat: -17.7850,
         lng: 31.0510,
         capacity: 100
     },
     {
-        id: 'cs-lot',
-        name: 'CS Lot',
-        lat: -17.7840,
+        id: 'science-lecture-theatre-parking',
+        name: 'Science Lecture Theatre Parking',
+        lat: -17.7810,
         lng: 31.0540,
-        capacity: 40
+        capacity: 60
     },
     {
-        id: 'sports-lot',
-        name: 'Sports Lot',
-        lat: -17.7850,
-        lng: 31.0500,
-        capacity: 200
+        id: 'students-union-parking',
+        name: 'Students Union Parking',
+        lat: -17.7860,
+        lng: 31.0520,
+        capacity: 120
     },
+    {
+        id: 'health-sciences-parking',
+        name: 'Health Sciences Parking',
+        lat: -17.7790,
+        lng: 31.0480,
+        capacity: 70
+    }
 ];
 
 async function seed() {
     console.log('Seeding zones...');
 
-    // Clean up bad data (optional, but good for this fix)
+    // Clean up bad data
     try {
+        console.log('Cleaning up old data...');
+        // Order matters due to foreign keys
+        await db.delete(parkingEvents);
+        await db.delete(issues);
+        await db.delete(zoneOverrides);
         await db.delete(zoneStatus);
+        await db.delete(sensors); // Sensors reference zones
         await db.delete(zones);
     } catch (e) {
         console.log('Clean up skipped or failed', e);
@@ -72,7 +93,7 @@ async function seed() {
         {
             id: 'unitv2-lot-library-01',
             type: 'UNITV2',
-            zoneId: 'library-lot',
+            zoneId: 'library-staff-parking',
             description: 'Main entrance camera',
             status: 'HEALTHY',
             lastHeartbeat: new Date(),
@@ -80,7 +101,7 @@ async function seed() {
         {
             id: 'sensor-admin-gate',
             type: 'OTHER',
-            zoneId: 'admin-lot',
+            zoneId: 'main-admin-parking',
             description: 'Gate sensor',
             status: 'WARNING', // Just to have variety
             lastHeartbeat: new Date(Date.now() - 1000 * 60), // 1 min ago

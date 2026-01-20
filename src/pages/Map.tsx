@@ -28,9 +28,9 @@ export default function MapPage() {
     // Local state for map view
     const [mapStyle, setMapStyle] = useState("mapbox://styles/mapbox/satellite-streets-v12");
     const [viewState, setViewState] = useState<ViewState>({
-        latitude: -17.7830, // Centered on UZ roughly
-        longitude: 31.0525,
-        zoom: 15,
+        latitude: -17.7840, // Centered on UZ Main Campus
+        longitude: 31.0530,
+        zoom: 16,
         bearing: 0,
         pitch: 0,
         padding: { top: 0, bottom: 0, left: 0, right: 0 }
