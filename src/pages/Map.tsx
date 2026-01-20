@@ -26,7 +26,7 @@ export default function MapPage() {
     const addParkingEvent = useParkingStore(state => state.addEvent);
 
     // Local state for map view
-    const [mapStyle, setMapStyle] = useState("mapbox://styles/mapbox/streets-v12");
+    const [mapStyle, setMapStyle] = useState("mapbox://styles/mapbox/satellite-streets-v12");
     const [viewState, setViewState] = useState<ViewState>({
         latitude: -17.7830, // Centered on UZ roughly
         longitude: 31.0525,
