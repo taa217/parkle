@@ -1,5 +1,10 @@
 
 const getApiBase = () => {
+    // Use env var if available (Production)
+    if (import.meta.env.VITE_API_URL) {
+        return `${import.meta.env.VITE_API_URL}/api`;
+    }
+
     // In development/local network, use the current hostname but port 3000
     const hostname = window.location.hostname;
     return `http://${hostname}:3000/api`;
