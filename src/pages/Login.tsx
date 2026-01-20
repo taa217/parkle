@@ -30,7 +30,7 @@ export default function Login() {
             <div className="flex-1 flex items-center justify-center p-4">
                 <Card className="w-full max-w-sm mx-auto shadow-md">
                     <CardHeader className="text-center space-y-2">
-                        <CardTitle className="text-2xl font-bold text-uz-navy">Welcome to UZ Parking</CardTitle>
+                        <CardTitle className="text-2xl font-bold text-uz-navy">Welcome to Parklee</CardTitle>
                         <CardDescription className="text-base text-gray-500">
                             Find parking faster on campus.
                         </CardDescription>
