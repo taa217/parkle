@@ -31,6 +31,7 @@ interface ZoneState {
     setDestination: (dest: string | null) => void;
     getRecommendedZones: () => Zone[];
     updateZone: (id: string, updates: Partial<Zone>) => void;
+    setZones: (zones: Zone[]) => void;
     applySnapshot: (zones: any[]) => void;
     applyPatch: (zone: any) => void;
 }

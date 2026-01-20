@@ -16,7 +16,7 @@ export function useZoneStream() {
     const [status, setStatus] = useState<'CONNECTING' | 'CONNECTED' | 'DISCONNECTED' | 'FALLBACK'>('CONNECTING');
     const eventSourceRef = useRef<EventSource | null>(null);
     const retryCountRef = useRef(0);
-    const fallbackIntervalRef = useRef<NodeJS.Timeout | null>(null);
+    const fallbackIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
     const connect = () => {
         if (eventSourceRef.current?.readyState === 1) return; // Already open
