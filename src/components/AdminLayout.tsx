@@ -14,7 +14,7 @@ export function AdminLayout() {
         <div className="flex h-screen bg-[#F5F5F0]">
             {/* Sidebar Desktop */}
             <aside className="hidden md:flex flex-col w-64 bg-[#0A1A2F] text-white p-6 shadow-xl z-20">
-                <div className="text-xl font-bold text-[#C5A059] mb-8 tracking-wide">UZ Parking Ops</div>
+                <div className="text-xl font-bold text-[#C5A059] mb-8 tracking-wide">Parklee Parking Ops</div>
                 <nav className="flex-1 space-y-2">
                     {navItems.map(item => (
                         <Link
