@@ -61,6 +61,29 @@ export default function Login() {
                                 {isLoading ? "Processing..." : "Continue"}
                             </Button>
 
+                            <div className="relative">
+                                <div className="absolute inset-0 flex items-center">
+                                    <span className="w-full border-t border-gray-200" />
+                                </div>
+                                <div className="relative flex justify-center text-xs uppercase">
+                                    <span className="bg-white px-2 text-muted-foreground">Or</span>
+                                </div>
+                            </div>
+
+                            <Button 
+                                type="button" 
+                                variant="outline" 
+                                className="w-full py-6 text-base" 
+                                onClick={() => {
+                                    localStorage.setItem("uz_parking_visitor", "true");
+                                    // Set default destination to Great Hall Parking
+                                    localStorage.setItem("uz_parking_primary_zone", "great-hall-parking");
+                                    navigate("/");
+                                }}
+                            >
+                                Continue as Visitor
+                            </Button>
+
                             <p className="text-center text-xs text-muted-foreground">
                                 Login with your  email address.
                             </p>

@@ -20,6 +20,13 @@ export default function Onboarding() {
     const [primaryZone, setPrimaryZone] = useState<string>("");
     const [plate, setPlate] = useState("");
 
+    // Redirect visitors
+    useEffect(() => {
+        if (localStorage.getItem("uz_parking_visitor")) {
+            navigate("/", { replace: true });
+        }
+    }, [navigate]);
+
     const handleNext = async () => {
         if (step < 3) {
             setStep(step + 1);

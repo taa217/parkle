@@ -9,6 +9,8 @@ interface LayoutProps {
 }
 
 export function Layout({ children, showProfile = true }: LayoutProps) {
+    const isAuthenticated = localStorage.getItem("uz_parking_session");
+    const isVisitor = localStorage.getItem("uz_parking_visitor");
     const navigate = useNavigate()
     const location = useLocation()
 
@@ -17,6 +19,23 @@ export function Layout({ children, showProfile = true }: LayoutProps) {
 
     // Show BottomNav on Home and Events pages
     const showBottomNav = ['/', '/events'].includes(location.pathname)
+
+    const handleProfileClick = () => {
+        if (isAuthenticated) {
+            // If logged in, logout
+            localStorage.removeItem("uz_parking_session");
+            localStorage.removeItem("uz_parking_visitor");
+            localStorage.removeItem("uz_parking_primary_zone");
+            navigate('/login');
+        } else if (isVisitor) {
+             // If visitor, go to login
+             localStorage.removeItem("uz_parking_visitor");
+             navigate('/login');
+        } else {
+             // Fallback
+             navigate('/login');
+        }
+    }
 
     return (
         <div className="min-h-screen w-full bg-uz-bg flex justify-center">
@@ -30,8 +49,9 @@ export function Layout({ children, showProfile = true }: LayoutProps) {
 
                     {shouldShowProfile && (
                         <button
-                            onClick={() => navigate('/onboarding')}
+                            onClick={handleProfileClick}
                             className="p-2 rounded-full hover:bg-uz-navy/5 text-uz-navy transition-colors"
+                            title={isAuthenticated ? "Logout" : "Login"}
                         >
                             <User className="w-5 h-5" />
                         </button>

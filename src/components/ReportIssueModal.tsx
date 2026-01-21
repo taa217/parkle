@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import { X } from 'lucide-react';
+import { X, LogIn } from 'lucide-react';
 import { type IssueType } from '../store/issuesStore';
 import { api } from '../services/api';
+import { useNavigate } from 'react-router-dom';
 
 interface ReportIssueModalProps {
     zoneId: string;
@@ -19,7 +20,50 @@ const ISSUE_TYPES: IssueType[] = [
 export function ReportIssueModal({ zoneId, onClose, onSuccess }: ReportIssueModalProps) {
     const [selectedType, setSelectedType] = useState<IssueType | null>(null);
     const [note, setNote] = useState('');
-    // const addIssue = useIssuesStore(state => state.addIssue); // Unused now
+    const navigate = useNavigate();
+    const isVisitor = localStorage.getItem("uz_parking_visitor");
+
+    if (isVisitor) {
+        return (
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 animate-in fade-in duration-200">
+                <div className="bg-white rounded-2xl w-full max-w-sm shadow-xl p-6 animate-in zoom-in-95 duration-200 text-center">
+                     <div className="flex justify-end mb-2">
+                        <button onClick={onClose} className="p-1 rounded-full hover:bg-slate-100 text-slate-500">
+                            <X size={20} />
+                        </button>
+                    </div>
+                    
+                    <div className="flex flex-col items-center gap-3 mb-6">
+                        <div className="w-12 h-12 bg-uz-navy/10 rounded-full flex items-center justify-center text-uz-navy">
+                            <LogIn size={24} />
+                        </div>
+                        <h3 className="text-xl font-bold text-uz-navy">Login Required</h3>
+                        <p className="text-slate-500 text-sm">
+                            Please login to report issues and help the community.
+                        </p>
+                    </div>
+
+                    <div className="space-y-3">
+                        <button
+                            onClick={() => {
+                                localStorage.removeItem("uz_parking_visitor");
+                                navigate('/login');
+                            }}
+                            className="w-full py-3 bg-uz-navy text-white rounded-xl font-semibold hover:bg-uz-navy/90 transition"
+                        >
+                            Login Now
+                        </button>
+                         <button
+                            onClick={onClose}
+                            className="w-full py-3 bg-white border border-slate-200 text-slate-700 rounded-xl font-semibold hover:bg-slate-50 transition"
+                        >
+                            Cancel
+                        </button>
+                    </div>
+                </div>
+            </div>
+        )
+    }
 
     const handleSubmit = async () => {
         if (!selectedType) return;

@@ -199,6 +199,11 @@ export default function MapPage() {
     };
 
     const handleParkedHere = async () => {
+        if (localStorage.getItem("uz_parking_visitor")) {
+            setToast({ message: "Login required to save parking", type: 'info' });
+            return;
+        }
+
         if (selectedZoneId) {
             try {
                 // Fire and forget to API

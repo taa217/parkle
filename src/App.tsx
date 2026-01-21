@@ -14,9 +14,10 @@ import AdminSensors from "./pages/admin/AdminSensors";
 // Auth Guard Component
 function RequireAuth({ children }: { children: React.ReactNode }) {
   const isAuthenticated = localStorage.getItem("uz_parking_session");
+  const isVisitor = localStorage.getItem("uz_parking_visitor");
   const location = useLocation();
 
-  if (!isAuthenticated) {
+  if (!isAuthenticated && !isVisitor) {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
@@ -26,8 +27,9 @@ function RequireAuth({ children }: { children: React.ReactNode }) {
 // Redirect if already logged in
 function RedirectIfAuthenticated({ children }: { children: React.ReactNode }) {
   const isAuthenticated = localStorage.getItem("uz_parking_session");
+  const isVisitor = localStorage.getItem("uz_parking_visitor");
 
-  if (isAuthenticated) {
+  if (isAuthenticated || isVisitor) {
     return <Navigate to="/" replace />;
   }
 
