@@ -13,7 +13,7 @@ export const ZoneStatusService = {
             const zones = await api.get('/zones/snapshot');
             // Transform API data to match Store Zone interface if needed
             // API returns: { id, name, lat, lng, capacity, status, confidence, availableCount, lastUpdated }
-            // Store expects: { ..., walkingMinutes } (walkingMinutes is static for now in frontend or needs to be calculated/merged)
+            // Store expects: { ..., tes } (walkingMinutes is static for now in frontend or needs to be calculated/merged)
 
             // We need to merge with existing static data (like walkingMinutes, which might not be in DB yet or we just preserve it)
             // For now, let's assume we merge with current store state to keep `walkingMinutes`

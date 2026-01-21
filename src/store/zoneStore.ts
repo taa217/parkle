@@ -43,7 +43,7 @@ const mapBackendToZone = (z: any): Zone => ({
     lng: z.lng,
     status: (z.effectiveStatus || z.status || 'UNKNOWN') as ZoneStatus,
     confidence: (z.confidence || 'LOW') as ConfidenceLevel,
-    walkingMinutes: 5, // TODO: calculate this
+    walkingMinutes: 1, // TODO: calculate this
     availableCount: z.effectiveAvailableCount ?? z.availableCount,
     lastUpdated: z.effectiveLastUpdated ? new Date(z.effectiveLastUpdated).getTime() : Date.now(),
     overrideActive: z.overrideActive,
