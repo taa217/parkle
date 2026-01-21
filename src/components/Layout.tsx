@@ -1,6 +1,7 @@
 import { useNavigate, useLocation } from "react-router-dom"
 import { User } from "lucide-react"
 import { cn } from "../lib/utils"
+import { BottomNav } from "./layout/BottomNav"
 
 interface LayoutProps {
     children: React.ReactNode
@@ -13,6 +14,9 @@ export function Layout({ children, showProfile = true }: LayoutProps) {
 
     // Only show profile on Home and Results, not Login or Onboarding
     const shouldShowProfile = showProfile && !['/login', '/onboarding'].includes(location.pathname)
+
+    // Show BottomNav on Home and Events pages
+    const showBottomNav = ['/', '/events'].includes(location.pathname)
 
     return (
         <div className="min-h-screen w-full bg-uz-bg flex justify-center">
@@ -35,9 +39,14 @@ export function Layout({ children, showProfile = true }: LayoutProps) {
                 </header>
 
                 {/* Content */}
-                <main className="flex-1 px-4 pb-8 flex flex-col">
+                <main className={cn(
+                    "flex-1 px-4 pb-8 flex flex-col",
+                    showBottomNav && "pb-24" // Add extra padding for bottom nav
+                )}>
                     {children}
                 </main>
+
+                {showBottomNav && <BottomNav />}
             </div>
         </div>
     )

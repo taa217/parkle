@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-route
 import Login from "./pages/Login";
 import Onboarding from "./pages/Onboarding";
 import Home from "./pages/Home";
+import Events from "./pages/Events";
 import MapPage from "./pages/Map";
 import { AdminGuard } from "./components/AdminGuard";
 import { AdminLayout } from "./components/AdminLayout";
@@ -58,6 +59,14 @@ export default function App() {
           element={
             <RequireAuth>
               <Home />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/events"
+          element={
+            <RequireAuth>
+              <Events />
             </RequireAuth>
           }
         />

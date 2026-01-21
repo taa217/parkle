@@ -5,16 +5,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/Card"
 import { Button } from "../components/ui/Button";
 import { Badge } from "../components/ui/Badge";
 import { MOCK_ZONES } from "../lib/data";
-import { getEventsForDate } from "../lib/events";
-import { EventChip } from "../components/EventChip";
 import { MapPin, Navigation } from "lucide-react";
 
 export default function Home() {
     const navigate = useNavigate();
     const [destination, setDestination] = useState("");
     
-    const events = getEventsForDate();
-
     useEffect(() => {
         // Prefill from onboarding
         const savedZone = localStorage.getItem("uz_parking_primary_zone");
@@ -74,24 +70,6 @@ export default function Home() {
                         </Button>
                     </CardContent>
                 </Card>
-
-                {/* Events Section */}
-                {events.length > 0 && (
-                    <div className="space-y-3">
-                        <h2 className="text-sm font-bold text-gray-400 uppercase tracking-widest px-1">Events</h2>
-                        <div className="flex gap-3 overflow-x-auto pb-2 -mx-4 px-4 scrollbar-hide snap-x">
-                            {events.slice(0, 5).map(event => (
-                                <EventChip
-                                    key={event.id}
-                                    event={event}
-                                    onClick={(e) => {
-                                        navigate(`/map?dest=${e.destinationZoneId}&event=${e.id}`);
-                                    }}
-                                />
-                            ))}
-                        </div>
-                    </div>
-                )}
 
                 {/* Status Overview */}
                 <div className="space-y-3">
