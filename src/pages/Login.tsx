@@ -44,7 +44,7 @@ export default function Login() {
                                 <input
                                     id="email"
                                     type="email"
-                                    placeholder="name@students.uz.ac.zw"
+                                    placeholder="example@email.com"
                                     className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-uz-navy focus:outline-none focus:ring-1 focus:ring-uz-navy transition-colors bg-white text-gray-900"
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
@@ -57,7 +57,7 @@ export default function Login() {
                             </Button>
 
                             <p className="text-center text-xs text-muted-foreground">
-                                WorkOS login coming soon.
+                                Login with your  email address.
                             </p>
                         </form>
                     </CardContent>
