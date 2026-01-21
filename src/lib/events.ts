@@ -38,7 +38,7 @@ export const MOCK_EVENTS: ParkingEvent[] = [
     }
 ];
 
-export const getEventsForDate = (date: Date = new Date()) => {
+export const getEventsForDate = (_date: Date = new Date()) => {
     // For mock purposes, we return all events as if they are today
     // In a real app, we would filter by date
     return MOCK_EVENTS;
