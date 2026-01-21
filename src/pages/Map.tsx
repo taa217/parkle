@@ -8,6 +8,7 @@ import { useZoneStore } from "../store/zoneStore";
 import { AlertCircle, AlertTriangle, Car, CheckCircle, ChevronDown, ChevronUp, Layers, Navigation, User, X } from "lucide-react";
 import { ReportIssueModal } from "../components/ReportIssueModal";
 import { api } from "../services/api";
+import { getEventById } from "../lib/events";
 
 import { useZoneStream } from "../hooks/useZoneStream";
 
@@ -19,6 +20,8 @@ export default function MapPage() {
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
     const destId = searchParams.get("dest");
+    const eventId = searchParams.get("event");
+    const activeEvent = eventId ? getEventById(eventId) : null;
 
     const { zones, getRecommendedZones, selectedZoneId, setSelectedZone } = useZoneStore();
     const [initialDestHandled, setInitialDestHandled] = useState(false);
@@ -66,7 +69,7 @@ export default function MapPage() {
     // Handle URL destination param
     useEffect(() => {
         if (initialDestHandled || !destId || zones.length === 0) return;
-
+        
         const targetZone = zones.find(z => z.id === destId);
         if (targetZone) {
             setSelectedZone(targetZone.id);
@@ -94,6 +97,17 @@ export default function MapPage() {
             }));
         }
     }, [recommendedZones, selectedZoneId, destId, initialDestHandled, setSelectedZone]);
+
+    // Handle Event Toast
+    useEffect(() => {
+        if (activeEvent) {
+            // Small delay to ensure it appears after load
+            const timer = setTimeout(() => {
+                setToast({ message: `Destination set: ${activeEvent.title}`, type: 'success' });
+            }, 500);
+            return () => clearTimeout(timer);
+        }
+    }, [activeEvent]);
 
     // Handle Toast Timer
     useEffect(() => {
@@ -409,9 +423,16 @@ export default function MapPage() {
                                             </span>
                                         )}
                                     </div>
-                                    <h2 className="text-2xl font-bold text-uz-navy leading-tight">
-                                        {selectedZone.name}
-                                    </h2>
+                                    <div className="flex flex-col">
+                                        {activeEvent && (
+                                            <span className="text-xs font-bold text-uz-gold uppercase tracking-wider mb-0.5">
+                                                Parking for {activeEvent.title}
+                                            </span>
+                                        )}
+                                        <h2 className="text-2xl font-bold text-uz-navy leading-tight">
+                                            {selectedZone.name}
+                                        </h2>
+                                    </div>
                                 </div>
                                 <div className="flex flex-col items-end gap-1">
                                     <div className={`px-2 py-1 rounded-lg border text-xs font-bold uppercase tracking-wide ${getStatusText(selectedZone.status)}`}>
