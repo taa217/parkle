@@ -1,73 +1,132 @@
-# React + TypeScript + Vite
+# Parklee - Smart Campus Parking System
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Parklee is a modern, real-time parking management solution designed for university campuses. It helps students, staff, and visitors find available parking spots efficiently, view real-time occupancy status, and navigate directly to their chosen zones. The system also includes a comprehensive admin dashboard for managing parking sensors and reported issues.
 
-Currently, two official plugins are available:
+## 🚀 Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### For Users
+- **Real-time Parking Status**: Live updates on parking availability (Available, Limited, Full) using Server-Sent Events (SSE).
+- **Interactive Map**: 3D map interface powered by Mapbox for visualizing parking zones across campus.
+- **Smart Navigation**: Integrated turn-by-turn navigation to selected parking zones.
+- **Event-based Parking**: Find the best parking spots based on campus events.
+- **Issue Reporting**: Users can report problems (e.g., "Zone full", "Sensor broken") directly from the app.
+- **"I Parked Here"**: Feature to mark your parking spot.
+- **Onboarding Flow**: Guided setup for new users.
 
-## React Compiler
+### For Administrators
+- **Admin Dashboard**: Centralized view of campus parking health.
+- **Issue Management**: Track and resolve user-reported issues.
+- **Sensor Management**: Monitor and configure parking sensors.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 🛠 Tech Stack
 
-## Expanding the ESLint configuration
+- **Framework**: [React 19](https://react.dev/) + [Vite](https://vitejs.dev/)
+- **Language**: [TypeScript](https://www.typescriptlang.org/)
+- **Styling**: [Tailwind CSS](https://tailwindcss.com/)
+- **Animations**: [Framer Motion](https://www.framer.com/motion/)
+- **State Management**: [Zustand](https://github.com/pmndrs/zustand)
+- **Maps**: [Mapbox GL JS](https://docs.mapbox.com/mapbox-gl-js/) + [React Map GL](https://visgl.github.io/react-map-gl/)
+- **Routing**: [React Router v7](https://reactrouter.com/)
+- **Icons**: [Lucide React](https://lucide.dev/)
+- **Forms**: [React Hook Form](https://react-hook-form.com/) + [Zod](https://zod.dev/)
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## 📂 Project Structure
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```
+src/
+├── components/       # Reusable UI components (Layouts, UI kit, etc.)
+├── hooks/            # Custom React hooks (e.g., useZoneStream)
+├── lib/              # Utilities, constants, and helper functions
+├── pages/            # Application views
+│   ├── admin/        # Admin dashboard pages
+│   ├── Home.tsx      # Main user dashboard
+│   ├── Map.tsx       # Interactive map view
+│   └── ...
+├── services/         # API integration and mock services
+├── store/            # Global state management (Zustand stores)
+└── types/            # TypeScript type definitions
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## 🏁 Getting Started
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+### Prerequisites
+- Node.js (v18 or higher recommended)
+- npm or yarn
+- PostgreSQL database
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+### Frontend Setup
+
+1. Clone the repository:
+   ```bash
+   git clone <repository-url>
+   cd parking
+   ```
+
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+3. Configure Environment Variables:
+   Create a `.env` file in the root directory and add your Mapbox token:
+   ```env
+   VITE_MAPBOX_TOKEN=your_mapbox_access_token_here
+   ```
+
+4. Run the development server:
+   ```bash
+   npm run dev
+   ```
+
+5. Open your browser and navigate to `http://localhost:5173`.
+
+### Backend Setup
+
+The backend server is located in the `server/` directory and handles real-time updates and database interactions.
+
+1. Navigate to the server directory:
+   ```bash
+   cd server
+   ```
+
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+3. Configure Environment Variables:
+   Create a `.env` file in the `server/` directory with the following variables:
+   ```env
+   DATABASE_URL=postgresql://user:password@localhost:5432/parklee_db
+   SENSOR_API_KEY=your_secure_sensor_api_key
+   CLIENT_ORIGIN=http://localhost:5173
+   ```
+
+4. Initialize the Database:
+   Run the following commands to generate migrations, apply them, and seed initial data:
+   ```bash
+   npm run generate
+   npm run migrate
+   npm run seed
+   ```
+
+5. Start the server:
+   ```bash
+   npm run dev
+   ```
+   The server will start on `http://localhost:3000`.
+
+## 📜 Scripts
+
+- `npm run dev`: Start the development server.
+- `npm run build`: Type-check and build the application for production.
+- `npm run lint`: Run ESLint to check for code quality issues.
+- `npm run preview`: Preview the production build locally.
+
+## 🤝 Contributing
+
+1. Fork the project
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
