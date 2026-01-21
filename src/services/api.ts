@@ -7,6 +7,9 @@ const getApiBase = () => {
 
     // In development/local network, use the current hostname but port 3000
     const hostname = window.location.hostname;
+    if (hostname !== 'localhost' && hostname !== '127.0.0.1' && !hostname.includes('192.168')) {
+        console.warn('VITE_API_URL is not defined! API calls will target port 3000 on the current domain, which likely fails in production.');
+    }
     return `http://${hostname}:3000/api`;
 };
 
