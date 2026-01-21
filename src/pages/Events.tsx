@@ -1,9 +1,8 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { EventCard } from '../components/events/EventCard';
 import { FilterPills } from '../components/events/FilterPills';
 import { MOCK_EVENTS } from '../lib/events';
 import { Layout } from '../components/Layout';
-import type { ParkingEvent } from '../lib/events';
 
 type FilterType = 'today' | 'week' | 'all';
 
@@ -12,7 +11,7 @@ export default function Events() {
 
     // Mock filtering logic - since all mock events are "today" in the data, 
     // we'll just return them all for now, but structure it for future real logic.
-    const filteredEvents = MOCK_EVENTS.filter(event => {
+    const filteredEvents = MOCK_EVENTS.filter(_event => {
         if (filter === 'all') return true;
         // logic for week/today would go here comparing event.startsAt
         return true; 
