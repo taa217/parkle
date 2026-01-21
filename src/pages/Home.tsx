@@ -56,10 +56,12 @@ export default function Home() {
 
                         <Button
                             onClick={() => {
-                                // Default to 'Library' for now if nothing selected, or better yet, just go to map.
-                                // In a real app we'd pass the actual selected destination ID.
-                                // Mocking a destination for now:
-                                navigate("/map?dest=library");
+                                if (destination) {
+                                    navigate(`/map?dest=${destination}`);
+                                } else {
+                                    // Fallback if nothing selected, maybe just go to map without filter
+                                    navigate("/map");
+                                }
                             }}
                             className="w-full bg-uz-navy text-white rounded-xl py-4 font-bold text-lg shadow-lg shadow-uz-navy/20 active:scale-[0.98] transition-transform"
                         >

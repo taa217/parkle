@@ -2,7 +2,7 @@
 import { useEffect, useMemo, useState } from "react";
 import Map, { Marker, NavigationControl, Source, Layer, type ViewState } from "react-map-gl/mapbox";
 import "mapbox-gl/dist/mapbox-gl.css";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useParkingStore } from "../store/parkingStore";
 import { useZoneStore } from "../store/zoneStore";
 import { AlertCircle, AlertTriangle, Car, CheckCircle, ChevronDown, ChevronUp, Layers, Navigation, User, X } from "lucide-react";
@@ -17,10 +17,17 @@ const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN || import.meta.env.NEXT_P
 
 export default function MapPage() {
     const navigate = useNavigate();
-    // const [searchParams] = useSearchParams(); // Unused
-    // const destId = searchParams.get("dest"); // Unused
+    const [searchParams] = useSearchParams();
+    const destId = searchParams.get("dest");
 
     const { zones, getRecommendedZones, selectedZoneId, setSelectedZone } = useZoneStore();
+    const [initialDestHandled, setInitialDestHandled] = useState(false);
+
+    // Reset handled flag when destId changes
+    useEffect(() => {
+        setInitialDestHandled(false);
+    }, [destId]);
+
     const { status: connectionStatus } = useZoneStream();
 
     const addParkingEvent = useParkingStore(state => state.addEvent);
@@ -56,8 +63,27 @@ export default function MapPage() {
         return getRecommendedZones();
     }, [zones, getRecommendedZones]); // Re-calc when zones change (mock updates)
 
-    // Select recommended zone on load
+    // Handle URL destination param
     useEffect(() => {
+        if (initialDestHandled || !destId || zones.length === 0) return;
+
+        const targetZone = zones.find(z => z.id === destId);
+        if (targetZone) {
+            setSelectedZone(targetZone.id);
+            setViewState(prev => ({
+                ...prev,
+                latitude: targetZone.lat,
+                longitude: targetZone.lng,
+                zoom: 16
+            }));
+            setInitialDestHandled(true);
+        }
+    }, [destId, zones, initialDestHandled, setSelectedZone]);
+
+    // Select recommended zone on load if no destination
+    useEffect(() => {
+        if (destId && !initialDestHandled) return; // Wait for dest handling
+
         if (recommendedZones.length > 0 && !selectedZoneId) {
             setSelectedZone(recommendedZones[0].id);
             setViewState(prev => ({
@@ -67,7 +93,7 @@ export default function MapPage() {
                 zoom: 16
             }));
         }
-    }, [recommendedZones, selectedZoneId]);
+    }, [recommendedZones, selectedZoneId, destId, initialDestHandled, setSelectedZone]);
 
     // Handle Toast Timer
     useEffect(() => {
