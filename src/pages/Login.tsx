@@ -7,12 +7,14 @@ import { api } from "../services/api";
 
 export default function Login() {
     const [email, setEmail] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!email) return;
 
+        setIsLoading(true);
         try {
             const { userId } = await api.post('/session', { email });
             // Set session key (userId)
@@ -22,6 +24,8 @@ export default function Login() {
         } catch (err) {
             console.error(err);
             alert("Login failed. Check console.");
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -45,15 +49,16 @@ export default function Login() {
                                     id="email"
                                     type="email"
                                     placeholder="example@email.com"
-                                    className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-uz-navy focus:outline-none focus:ring-1 focus:ring-uz-navy transition-colors bg-white text-gray-900"
+                                    className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-uz-navy focus:outline-none focus:ring-1 focus:ring-uz-navy transition-colors bg-white text-gray-900 disabled:opacity-50 disabled:cursor-not-allowed"
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
+                                    disabled={isLoading}
                                     required
                                 />
                             </div>
 
-                            <Button type="submit" className="w-full py-6 text-base" disabled={!email}>
-                                Continue
+                            <Button type="submit" className="w-full py-6 text-base" disabled={!email || isLoading} loading={isLoading}>
+                                {isLoading ? "Processing..." : "Continue"}
                             </Button>
 
                             <p className="text-center text-xs text-muted-foreground">
