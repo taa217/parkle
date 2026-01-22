@@ -5,12 +5,13 @@ import "mapbox-gl/dist/mapbox-gl.css";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useParkingStore } from "../store/parkingStore";
 import { useZoneStore } from "../store/zoneStore";
-import { AlertCircle, AlertTriangle, Car, CheckCircle, ChevronDown, ChevronUp, Layers, Navigation, User, X } from "lucide-react";
+import { AlertCircle, AlertTriangle, Car, CheckCircle, ChevronDown, ChevronUp, Layers, Navigation, User, X, Volume2, VolumeX } from "lucide-react";
 import { ReportIssueModal } from "../components/ReportIssueModal";
 import { api } from "../services/api";
 import { getEventById } from "../lib/events";
 
 import { useZoneStream } from "../hooks/useZoneStream";
+import { useVoiceNavigation } from "../hooks/useVoiceNavigation";
 
 // Fallback to strict Mapbox token check
 // Vite usually requires VITE_ prefix, but we check both as per plan
@@ -25,6 +26,8 @@ export default function MapPage() {
 
     const { zones, getRecommendedZones, selectedZoneId, setSelectedZone } = useZoneStore();
     const [initialDestHandled, setInitialDestHandled] = useState(false);
+
+    const { speak, cancel, isMuted, toggleMute, supported: voiceSupported } = useVoiceNavigation();
 
     // Reset handled flag when destId changes
     useEffect(() => {
@@ -144,6 +147,7 @@ export default function MapPage() {
             setIsNavigating(false);
             setRoute(null);
             setUserLocation(null);
+            cancel(); // Stop speaking
             return;
         }
 
@@ -168,9 +172,16 @@ export default function MapPage() {
                 const data = await response.json();
                 
                 if (data.routes && data.routes.length > 0) {
-                    setRoute(data.routes[0].geometry);
+                    const routeData = data.routes[0];
+                    setRoute(routeData.geometry);
                     setIsNavigating(true);
                     
+                    // Voice Navigation
+                    const durationMins = Math.round(routeData.duration / 60);
+                    const firstStep = routeData.legs?.[0]?.steps?.[0]?.maneuver?.instruction;
+                    
+                    speak(`Starting navigation to ${selectedZone.name}. Trip time is approximately ${durationMins} minutes. ${firstStep || ''}`);
+
                     // Center map on user to start
                     setViewState(prev => ({
                         ...prev,
@@ -477,13 +488,23 @@ export default function MapPage() {
                                 </div>
                             </div>
 
-                            <button
-                                onClick={handleNavigate}
-                                className={`w-full py-3.5 ${isNavigating ? 'bg-red-600 shadow-red-600/20' : 'bg-uz-navy shadow-uz-navy/20'} text-white rounded-xl font-bold text-lg shadow-lg active:scale-[0.98] transition flex items-center justify-center gap-2 mb-3`}
-                            >
-                                {isNavigating ? <X size={20} /> : <Navigation size={20} />}
-                                {isNavigating ? "Stop Navigation" : "Start Navigation"}
-                            </button>
+                            <div className="flex gap-2 mb-3">
+                                <button
+                                    onClick={handleNavigate}
+                                    className={`flex-1 py-3.5 ${isNavigating ? 'bg-red-600 shadow-red-600/20' : 'bg-uz-navy shadow-uz-navy/20'} text-white rounded-xl font-bold text-lg shadow-lg active:scale-[0.98] transition flex items-center justify-center gap-2`}
+                                >
+                                    {isNavigating ? <X size={20} /> : <Navigation size={20} />}
+                                    {isNavigating ? "Stop Navigation" : "Start Navigation"}
+                                </button>
+                                {isNavigating && voiceSupported && (
+                                    <button
+                                        onClick={toggleMute}
+                                        className={`px-4 rounded-xl font-bold text-lg shadow-lg active:scale-[0.98] transition flex items-center justify-center ${isMuted ? 'bg-slate-200 text-slate-500' : 'bg-uz-gold text-uz-navy shadow-uz-gold/20'}`}
+                                    >
+                                        {isMuted ? <VolumeX size={24} /> : <Volume2 size={24} />}
+                                    </button>
+                                )}
+                            </div>
 
 
                             {/* Trust Loop Actions */}
